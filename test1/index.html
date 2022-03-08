@@ -1,0 +1,218 @@
+<!Doctype html>
+<html lang="ko">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+              crossorigin="anonymous">
+
+        <!-- JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+
+        <!-- 구글폰트 -->
+        <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+
+        <title>SW사관학교 정글 | 간단메모</title>
+
+        <!-- style -->
+        <style type="text/css">
+            * {
+                font-family: "Stylish", sans-serif;
+            }
+
+            .wrap {
+                width: 900px;
+                margin: auto;
+            }
+
+            .comment {
+                color: blue;
+                font-weight: bold;
+            }
+
+            #post-box {
+                width: 500px;
+                margin: 20px auto;
+                padding: 50px;
+                border: black solid;
+                border-radius: 5px;
+            }
+
+            .mainTitle {
+                font-size: 30px;
+                margin: 20px;
+            }
+
+            .form-control {
+                width : 50%;
+            }
+
+            .buttons {
+              margin: 20px;
+            }
+        </style>
+        <script>
+            $(document).ready(function () {
+                showArticles();
+            });
+
+            function savePost() {
+                let title = $('#post-title').val()
+                let content = $('#post-content').val()
+
+                $.ajax({
+                    type: "POST",
+                    url: "/#",
+                    data: {
+                      title_give : title,
+                      content_give : content,
+                    },
+                    success: function (response) { // 성공하면
+                        alert(response["msg"]);
+                        window.location.reload()
+                    }
+                })
+            }
+
+            function deletePost() {
+              $.ajax({
+                type: "DELETE",
+                url: "/#",
+                data: {},
+                success: function (response) {
+                  alert(response["msg"]);
+                  window.location.reload()
+            }
+
+            function editPost() {
+              $.ajax({
+                type: "PUT",
+                url: "/#",
+                data: {},
+                success: function (response) {
+                  alert(response["msg"]);
+                  window.location.reload()
+            }
+
+            function showArticles() {
+                $.ajax({
+                    type: "GET",
+                    url: "/#",
+                    data: {},
+                    success: function (response) {
+                        let articles = response['all_aticles']
+                        for (let i = 0; i < articles.length; i++) {
+                          let title = articles[i]['title']
+                          let content = articles[i]['content']
+                          let postNum = i
+
+                            let temp_html = `<div class="card">
+                                              <div class="card-body">
+                                                <p class="card-title" id="title-${postNum}">${title}</p>
+                                                <p class="card-text" id="content-${postNum}">${content}</p>
+                                              </div>
+                                              <button type="button" class="btn btn-primary" onclick="savePost()" style= "margin-left:20px;" id="editBtn${postNum}" >수정</button>
+                                              <button type="button" class="btn btn-primary" onclick="deletePost()" id="delBtn${postNum}">삭제</button>
+                                            </div>`
+                            $('#cards-box').append(temp_html)
+                        }
+                    }
+                })
+            }
+        </script>
+
+    </head>
+
+    <body>
+        <div class="wrap">
+            <div class="jumbotron">
+              <div class="row">
+                <h1 class="mainTitle">나홀로 메모장</h1>
+              </div>
+                <div class="form-group">
+                  <input id="memo-title" class="form-control" placeholder="메모 제목을 입력하세요">
+                </div>
+                <div class="form-group">
+                  <textarea id="memo-content" class="form-control" rows="3" placeholder="내용을 입력하세요"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" onclick="savePost()">저장하기</button>
+            </div>
+
+            <div id="card-list">
+
+              <div id="cards-box" class="card-columns">
+                <!--
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="card-title">테스트 타이틀</p>
+                      <p class="card-text">테스트 내용</p>
+                    </div>
+                    <div class="buttons">
+                      <button type="button" class="btn btn-primary" onclick="savePost()">수정</button>
+                      <button type="button" class="btn btn-primary" onclick="savePost()">삭제</button>
+                    </div>
+                  </div>
+                -->
+
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-title">테스트 타이틀</p>
+                    <p class="card-text">테스트 내용</p>
+                  </div>
+                  <button type="button" class="btn btn-primary" onclick="savePost()" style= "margin-left:20px;" >수정</button>
+                  <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
+                </div>
+
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-title">테스트 타이틀</p>
+                    <p class="card-text">테스트 내용</p>
+                  </div>
+                  <button type="button" class="btn btn-primary" onclick="savePost()" style= "margin-left:20px;" >수정</button>
+                  <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
+                </div>
+
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-title">테스트 타이틀</p>
+                    <p class="card-text">테스트 내용</p>
+                  </div>
+                  <button type="button" class="btn btn-primary" onclick="savePost()" style= "margin-left:20px;" >수정</button>
+                  <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
+                </div>
+
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-title">테스트 타이틀</p>
+                    <p class="card-text">테스트 내용</p>
+                  </div>
+                  <button type="button" class="btn btn-primary" onclick="savePost()" style= "margin-left:20px;" >수정</button>
+                  <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
+                </div>
+                
+                <div class="card">
+                  <div class="card-body">
+                    <p class="card-title">테스트 타이틀</p>
+                    <p class="card-text">테스트 내용</p>
+                  </div>
+                  <button type="button" class="btn btn-primary" onclick="savePost()" style= "margin-left:20px;" >수정</button>
+                  <button type="button" class="btn btn-primary" onclick="deletePost()">삭제</button>
+                </div>
+                
+              </div>
+            </div>
+
+            
+        </div>
+    </body>
+
+</html>
